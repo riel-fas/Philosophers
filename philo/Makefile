@@ -6,7 +6,7 @@ CFLAGS			=	-Wall -Wextra -Werror
 
 
 SRCS			=	philo_main.c \
-					philo_adds.c \
+					philo_plus.c \
 					parsing.c \
 
 OBJS			=	${SRCS:.c=.o}

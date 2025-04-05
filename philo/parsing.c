@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:30:56 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/05 05:22:12 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/05 21:50:02 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ static	char	*check_input(char *input)
 	else if (input[x] == '-')
 		error_mes_exit("		🚦ERROR🚦\n⛔️INPUT CANT BE NEGATIVE\n⛔️");
 	if (!(input[x] >= '0' && input[x] <= '9'))
-		error_mes_exit("		🚦ERROR🚦\n		⛔️INPUT MUST BE NUMBERS\n⛔️");
+		error_mes_exit("		🚦ERROR🚦\n⛔️INPUT MUST BE NUMBERS\n⛔️");
 	number = input + x;
 	x = 0;
 	while (number[x] >= '0' && number[x] <= '9')
 		x++;
 	if (x > 10)
-		error_mes_exit("		🚦ERROR🚦\n		⛔️THE INPUT IS BIGGER THAN INT_MAX⛔️");
+		error_mes_exit("		🚦ERROR🚦\n⛔️THE INPUT IS BIGGER THAN INT_MAX⛔️");
 	return (number);
 }
 
@@ -52,7 +52,7 @@ static long	atoi_v2(char *s)
 		x++;
 	}
 	if (result > INT_MAX)
-		error_mes_exit("		🚦ERROR🚦\n		⛔️INT_MAX IS THE LIMIT⛔️");
+		error_mes_exit("		🚦ERROR🚦\n⛔️INT_MAX IS THE LIMIT⛔️");
 	return (result);
 }
 
@@ -67,15 +67,9 @@ void	input_pars(t_args *input, char **av)
 	input->time_to_sleep = atoi_v2(av[4]) * 1000;
 
 	if (input->time_to_die < 60000 || input->time_to_eat < 60000 || input->time_to_sleep < 60000)
-		error_mes_exit("		🚦ERROR🚦\n		⛔️TIME SHOULD BE MORE THAN 60 MILLI.SE.⛔️");
+		error_mes_exit("		🚦ERROR🚦\n⛔️TIME SHOULD BE MORE THAN 60 MILLI.SE.⛔️");
 	if (av[5])
 		input->meals_limit = atoi_v2(av[5]);
 	else
 		input->meals_limit = 0;
-
-
-
-
-
-
 }

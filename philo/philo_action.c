@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_adds.c                                       :+:      :+:    :+:   */
+/*   philo_action.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/05 03:12:13 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/05 03:17:20 by riel-fas         ###   ########.fr       */
+/*   Created: 2025/04/05 21:51:57 by riel-fas          #+#    #+#             */
+/*   Updated: 2025/04/05 21:54:24 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	error_mes_exit(char *error)
+void	philo_act(t_args *input)
 {
-	printf("%s\n", error);
-	exit(EXIT_FAILURE);
+	int	x;
+
+
+
+
+
 
 
 }

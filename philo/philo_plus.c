@@ -1,44 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_main.c                                       :+:      :+:    :+:   */
+/*   philo_plus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/02 15:12:10 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/05 21:52:26 by riel-fas         ###   ########.fr       */
+/*   Created: 2025/04/05 03:12:13 by riel-fas          #+#    #+#             */
+/*   Updated: 2025/04/05 21:51:03 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philosophers.h"
 
-////////////./philo xxx //// xxx //// xxx  //// xxx //// [x]/////////////a philosopher is a struct and forks are mutex
-int	main(int ac, char **av)
+void	error_mes_exit(char *error)
 {
-	t_args input;
-
-
-	if (ac == 5 || ac == 6)
-	{
-		input_pars(&input, av);
-
-		philo_act(&input);
-
-	// 	dinner(&input);
-
-	// 	free_leak(&input);
-	}
-	else
-		error_mes_exit("		🚦ERROR🚦\n⛔️INPUT SHOULD BE : ./philo xx xxx xxx xxx [xxx]⛔️");
-
-
-
-
-
-
-
-
+	printf("%s\n", error);
+	exit(EXIT_FAILURE);
 
 
 }
