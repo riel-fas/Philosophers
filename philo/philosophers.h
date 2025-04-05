@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:11:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/05 00:46:59 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/05 03:04:43 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,46 @@
 
 
 
+typedef struct s_fork
+{
+	pthread_mutex_t		fork;
+	int					fork_id;
+
+
+}	t_fork;
+
+
+typedef struct s_philosopher
+{
+	int					philo_id;
+	long				meal_count;
+	int					full;
+	long				last_meal_time;
+
+	//forks on right and left
+	t_fork				*right_fork;
+	t_fork				*left_fork;
+
+	pthread_t			thread_id;
+
+}	t_philosopher;
 
 
 
+typedef struct s_args
+{
+	long				philo_nbr;
+	long				time_to_die;
+	long				time_to_eat;
+	long				time_to_sleep;
+	long				meals_limit;
+	long				simulations_on;
+	int					simulation_off;
+	t_philosopher		philosophers;
+	t_fork				forks;
+}	t_args;
 
-
-
-
-
-
-
-
+void	error_mes_exit(char *error);
 
 
 
@@ -152,4 +181,8 @@
 
 
 //pthread_creat ; create thread on a  loop
+//int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void*), void *arg);
+//                  >
 //pthread_join ; get return value from the thread
+// >pthread_join waits for the specified thread to finish before continuing execution.
+//  It's a blocking function that causes the calling thread to pause until the thread being "joined" completes.

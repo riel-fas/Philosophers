@@ -1,11 +1,13 @@
 NAME			=	philo
 
 CC				=	CC
-CFLAGS			=	-Wall -Wetra -Werror
+CFLAGS			=	-Wall -Wextra -Werror
 
 
 
-SRCS			=
+SRCS			=	philo_main.c \
+					philo_adds.c \
+
 OBJS			=	${SRCS:.c=.o}
 
 
