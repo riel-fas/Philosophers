@@ -1,13 +1,16 @@
 NAME			=	philo
 
 CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror
+CFLAGS			=	-Wall -Wextra -Werror -fsanitize=address
 
 
 
 SRCS			=	philo_main.c \
 					philo_plus.c \
-					parsing.c \
+					philo_parsing.c \
+					philo_action.c \
+					philo_routine.c \
+					philo_time.c \
 
 OBJS			=	${SRCS:.c=.o}
 
@@ -34,3 +37,4 @@ fclean	:	clean
 re	:	fclean all
 
 .phony	:	all clean fclean re
+
