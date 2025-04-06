@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:12:10 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:01:34 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:14:19 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,21 @@
 
 // }
 
-int	main(int ac, char **av)
+int main(int ac, char **av)
 {
-	t_args input;
+    t_args input;
 
-	if (ac < 5 || ac > 6)
-	{
-		printf("🚦ERROR🚦\n⛔️INPUT SHOULD BE : ./philo xx xxx xxx xxx [xxx]⛔️\n");
-		return (1);
-	}
-	else
-	{
-		input_pars(ac, av, &input);
-		philo_act(&input);
-	}
-	return (0);
+    if (ac < 5 || ac > 6)
+    {
+        printf("🚦ERROR🚦\n⛔️INPUT SHOULD BE : ./philo xx xxx xxx xxx [xxx]⛔️\n");
+        return (1);
+    }
+
+    if (input_pars(ac, av, &input) != 0) // Add this check
+    {
+        return (1); // Return if parsing failed
+    }
+
+    philo_act(&input);
+    return (0);
 }

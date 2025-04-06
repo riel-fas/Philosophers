@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 21:51:57 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 01:02:00 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:10:52 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,41 @@ void	philo_act(t_args *input)
 // }
 
 // Monitor philosophers for death and completion
+// void	monitor_philosophers(t_args *input)
+// {
+// 	int		i;
+// 	int		all_full;
+// 	long	current_time;
+
+// 	while (!input->simulation_off)
+// 	{
+// 		i = 0;
+// 		all_full = 1;
+//         // Check each philosopher
+// 		while (i < input->philo_nbr)
+// 		{
+// 			current_time = get_current_time();
+//             // Check if philosopher died (time since last meal > time_to_die)
+// 			if ((current_time - input->philosophers[i].last_meal_time) >
+// 				(input->time_to_die / 1000))
+// 			{
+// 				printf("%ld %d died\n", current_time - input->start_time, input->philosophers[i].philo_id);
+// 				input->simulation_off = true;
+// 				break;
+// 			}
+//             // Check if all philosophers are full
+// 			if (input->meals_limit > 0 && !input->philosophers[i].full)
+// 				all_full = 0;
+// 			i++;
+// 		}
+//         // If all philosophers are full, end simulation
+// 		if (input->meals_limit > 0 && all_full)
+// 			input->simulation_off = true;
+//         // Short sleep to avoid wasting CPU
+//         usleep(1000);
+//     }
+// }
+
 void	monitor_philosophers(t_args *input)
 {
 	int		i;
@@ -130,30 +165,30 @@ void	monitor_philosophers(t_args *input)
 	{
 		i = 0;
 		all_full = 1;
-        // Check each philosopher
+		// Check each philosopher
 		while (i < input->philo_nbr)
 		{
 			current_time = get_current_time();
-            // Check if philosopher died (time since last meal > time_to_die)
-			if ((current_time - input->philosophers[i].last_meal_time) >
-				(input->time_to_die / 1000))
+			// Check if philosopher died - use time_to_die directly, not divided
+			if ((current_time - input->philosophers[i].last_meal_time) > input->time_to_die)
 			{
 				printf("%ld %d died\n", current_time - input->start_time, input->philosophers[i].philo_id);
 				input->simulation_off = true;
 				break;
 			}
-            // Check if all philosophers are full
+			// Check if all philosophers are full
 			if (input->meals_limit > 0 && !input->philosophers[i].full)
 				all_full = 0;
 			i++;
 		}
-        // If all philosophers are full, end simulation
+		// If all philosophers are full, end simulation
 		if (input->meals_limit > 0 && all_full)
 			input->simulation_off = true;
-        // Short sleep to avoid wasting CPU
-        usleep(1000);
-    }
+		// Short sleep to avoid wasting CPU
+		usleep(1000);
+	}
 }
+
 
 // Clean up resources
 void	cleanup_resources(t_args *input)
