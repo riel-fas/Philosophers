@@ -6,29 +6,29 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 00:00:14 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 06:51:32 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 07:06:32 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 // Function to handle fork picking
-void	pick_forks(t_philosopher *philo)
+void pick_forks(t_philosopher *philo)
 {
     // Always pick the lower-numbered fork first to prevent deadlock
-	if (philo->right_fork->fork_id < philo->left_fork->fork_id)
-	{
-		pthread_mutex_lock(&(philo->right_fork->fork_mutex));
-		print_status(philo, "has taken a fork");
-		pthread_mutex_lock(&(philo->left_fork->fork_mutex));
-		print_status(philo, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(&(philo->left_fork->fork_mutex));
-		print_status(philo, "has taken a fork");
-		pthread_mutex_lock(&(philo->right_fork->fork_mutex));
-		print_status(philo, "has taken a fork");
+    if (philo->right_fork->fork_id < philo->left_fork->fork_id)
+    {
+        pthread_mutex_lock(&(philo->right_fork->fork_mutex));
+        print_status(philo, "has taken a fork");
+        pthread_mutex_lock(&(philo->left_fork->fork_mutex));
+        print_status(philo, "has taken a fork");
+    }
+    else
+    {
+        pthread_mutex_lock(&(philo->left_fork->fork_mutex));
+        print_status(philo, "has taken a fork");
+        pthread_mutex_lock(&(philo->right_fork->fork_mutex));
+        print_status(philo, "has taken a fork");
     }
 }
 
@@ -58,28 +58,26 @@ void	pick_forks(t_philosopher *philo)
 // 	precise_sleep(philo->input->time_to_sleep / 1000); // Convert microseconds to milliseconds
 // }
 
-void	eat(t_philosopher *philo)
+void eat(t_philosopher *philo)
 {
-	t_args *input = philo->input;
-	print_status(philo, "is eating");
-	// Update last meal time
-	philo->last_meal_time = get_current_time();
-	// Remove the division by 1000
-	precise_sleep(input->time_to_eat);
-	// Increment meal count
-	philo->meal_count++;
-	// Check if philosopher is full
-	if (input->meals_limit > 0 && philo->meal_count >= input->meals_limit)
-		philo->full = 1;
+    t_args *input = philo->input;
+    print_status(philo, "is eating");
+    // Update last meal time
+    philo->last_meal_time = get_current_time();
+    precise_sleep(input->time_to_eat);
+    // Increment meal count
+    philo->meal_count++;
+    // Check if philosopher is full
+    if (input->meals_limit > 0 && philo->meal_count >= input->meals_limit)
+        philo->full = 1;
 }
 
-void	release_forks(t_philosopher *philo)
+void release_forks(t_philosopher *philo)
 {
-	pthread_mutex_unlock(&(philo->right_fork->fork_mutex));
-	pthread_mutex_unlock(&(philo->left_fork->fork_mutex));
-	print_status(philo, "is sleeping");
-	// Remove the division by 1000
-	precise_sleep(philo->input->time_to_sleep);
+    pthread_mutex_unlock(&(philo->right_fork->fork_mutex));
+    pthread_mutex_unlock(&(philo->left_fork->fork_mutex));
+    print_status(philo, "is sleeping");
+    precise_sleep(philo->input->time_to_sleep);
 }
 
 
@@ -91,13 +89,13 @@ void *philosopher_routine(void *arg)
 
     // Set last meal time to start time
     philo->last_meal_time = get_current_time();
-	// Add this to the philosopher_routine function before the main loop
-	if (input->philo_nbr == 1)
-	{
-	    print_status(philo, "has taken a fork");
-	    precise_sleep(input->time_to_die);
-	    return NULL;
-	}
+    // Handle single philosopher case
+    if (input->philo_nbr == 1)
+    {
+        print_status(philo, "has taken a fork");
+        precise_sleep(input->time_to_die);
+        return NULL;
+    }
     // Stagger philosophers - more effectively
     if (philo->philo_id % 2 == 0)
         precise_sleep(input->time_to_eat / 2);
