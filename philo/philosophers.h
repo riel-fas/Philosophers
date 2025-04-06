@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:11:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/05 04:10:14 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 00:21:45 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,51 +20,69 @@
 # include <limits.h>
 # include <pthread.h> //mutex : init destroy lock unlock
 						//threads : creat join detach
-
+# include <stdbool.h>
 
 
 typedef struct s_fork
 {
-	pthread_mutex_t		fork;
-	int					fork_id;
-
-
+    int				fork_id;
+    pthread_mutex_t	fork_mutex;
 }	t_fork;
 
 
 typedef struct s_philosopher
 {
-	int					philo_id;
-	long				meal_count;
-	int					full;
-	long				last_meal_time;
+    int					philo_id;
+    long				meal_count;
+    int					full;
+    long				last_meal_time;
 
-	//forks on right and left
-	t_fork				*right_fork;
-	t_fork				*left_fork;
+    //forks on right and left
+    t_fork				*right_fork;
+    t_fork				*left_fork;
 
-	pthread_t			thread_id;
+    pthread_t			thread_id;
+    struct s_args		*input;
 
 }	t_philosopher;
 
 
-
 typedef struct s_args
 {
-	long				philo_nbr;
-	long				time_to_die;
-	long				time_to_eat;
-	long				time_to_sleep;
-	long				meals_limit;
-	long				simulations_on;
-	int					simulation_off;
-	t_philosopher		philosophers;
-	t_fork				forks;
+    long				philo_nbr;
+    long				time_to_die;
+    long				time_to_eat;
+    long				time_to_sleep;
+    long				meals_limit;
+    long				start_time;
+    long				simulations_on;
+    bool				simulation_off;
+    t_philosopher		*philosophers;
+    t_fork				*forks;
 }	t_args;
 
-void	error_mes_exit(char *error);
-void	input_pars(t_args *input, char **av);
 
+// Add these function prototypes to your header
+void	philo_act(t_args *input);
+void	input_pars(int ac, char **av, t_args *input);
+
+
+// Time utilities
+long	get_current_time(void);
+void	precise_sleep(long milliseconds);
+void	print_status(t_philosopher *philo, char *status);
+
+// Philosopher routines
+void	pick_forks(t_philosopher *philo);
+void	eat(t_philosopher *philo);
+void	release_forks(t_philosopher *philo);
+void	*philosopher_routine(void *arg);
+
+// Monitoring and cleanup
+void	monitor_philosophers(t_args *input);
+void	cleanup_resources(t_args *input);
+
+// Also add start_time to t_args struct
 
 
 #endif
