@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 00:00:14 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:24:24 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 06:51:32 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	pick_forks(t_philosopher *philo)
 		pthread_mutex_lock(&(philo->right_fork->fork_mutex));
 		print_status(philo, "has taken a fork");
 		pthread_mutex_lock(&(philo->left_fork->fork_mutex));
-	print_status(philo, "has taken a fork");
+		print_status(philo, "has taken a fork");
 	}
 	else
 	{
@@ -84,31 +84,47 @@ void	release_forks(t_philosopher *philo)
 
 
 // Main routine for each philosopher
-void	*philosopher_routine(void *arg)
+void *philosopher_routine(void *arg)
 {
-	t_philosopher	*philo;
-	t_args			*input;
+    t_philosopher *philo = (t_philosopher *)arg;
+    t_args *input = philo->input;
 
-	philo = (t_philosopher *)arg;
-	input = philo->input;
-    // Set initial last meal time to start time
-	philo->last_meal_time = get_current_time();
-
-	// Stagger philosopher start times to reduce contention
-	if (philo->philo_id % 2 == 0)
-		usleep(1000); // Small delay for even-numbered philosophers
-    // Continue until simulation ends
-	while (!input->simulation_off)
+    // Set last meal time to start time
+    philo->last_meal_time = get_current_time();
+	// Add this to the philosopher_routine function before the main loop
+	if (input->philo_nbr == 1)
 	{
-        // Thinking state
-		print_status(philo, "is thinking");
-        // Eating state (includes picking up forks)
-		pick_forks(philo);
-		eat(philo);
-		release_forks(philo);
-        // Check if philosopher is full
-		if (philo->full)
-			break;
+	    print_status(philo, "has taken a fork");
+	    precise_sleep(input->time_to_die);
+	    return NULL;
 	}
-	return (NULL);
+    // Stagger philosophers - more effectively
+    if (philo->philo_id % 2 == 0)
+        precise_sleep(input->time_to_eat / 2);
+
+    while (!input->simulation_off)
+    {
+        print_status(philo, "is thinking");
+
+        // Don't continue if simulation is off
+        if (input->simulation_off)
+            break;
+
+        pick_forks(philo);
+
+        // Check again before eating
+        if (input->simulation_off) {
+            pthread_mutex_unlock(&(philo->right_fork->fork_mutex));
+            pthread_mutex_unlock(&(philo->left_fork->fork_mutex));
+            break;
+        }
+
+        eat(philo);
+        release_forks(philo);
+
+        // Break if philosopher is full
+        if (input->meals_limit > 0 && philo->meal_count >= input->meals_limit)
+            break;
+    }
+    return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 23:58:13 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 01:13:36 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 06:52:00 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,15 @@ long	get_current_time(void)
 }
 
 // Sleep for a specified number of milliseconds
-void	precise_sleep(long milliseconds)
+// In philo_time.c
+void precise_sleep(long milliseconds)
 {
-	long	start_time;
-	long	current_time;
+    long start = get_current_time();
 
-	start_time = get_current_time();
-	while (1)
-	{
-		current_time = get_current_time();
-		if (current_time - start_time >= milliseconds)
-			break;
-		usleep(500); // Sleep in small increments for more precision
-	}
+    while ((get_current_time() - start) < milliseconds)
+    {
+        usleep(500); // Smaller sleep value for better precision
+    }
 }
 
 // Print philosopher status with timestamp

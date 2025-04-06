@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:11:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:10:12 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 06:41:21 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_args
 	long			start_time;
 	t_philosopher	*philosophers;
 	t_fork			*forks;
+	pthread_mutex_t	sim_mutex;
 }	t_args;
 
 // Main functions
