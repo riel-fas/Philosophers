@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:30:56 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:13:34 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:19:14 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,21 +116,21 @@
 // }
 
 
-int check_input(const char *str)
+int	check_input(const char *str)
 {
-    // First check if str is NULL before trying to access it
-    if (!str)
-        return (1);
+	// First check if str is NULL before trying to access it
+	if (!str)
+		return (1);
 
-    if (*str == '+')
-        str++;
-    while (*str)
-    {
-        if (!(*str >= '0' && *str <= '9')) // Note the quotes around digits
-            return (1);
-        str++;
-    }
-    return (0);
+	if (*str == '+')
+		str++;
+	while (*str)
+	{
+		if (!(*str >= '0' && *str <= '9')) // Use character digits, not numeric values
+			return (1);
+		str++;
+	}
+	return (0);
 }
 
 int	atoi_v2(const char *str)
