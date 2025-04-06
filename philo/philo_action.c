@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 21:51:57 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:20:24 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:25:00 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	init_philosophers(t_args *input)
 		input->philosophers[x].philo_id = x + 1;
 		input->philosophers[x].meal_count = 0;
 		input->philosophers[x].full = 0;
-		// Initialize last_meal_time to current time, not 0
+		// Initialize last_meal_time to current time or start time, not 0
 		input->philosophers[x].last_meal_time = get_current_time();
 		input->philosophers[x].right_fork = &input->forks[x];
 		//to avoid overlap we use % //the left is the next one
@@ -170,7 +170,7 @@ void	monitor_philosophers(t_args *input)
 		while (i < input->philo_nbr)
 		{
 			current_time = get_current_time();
-			// Don't divide time_to_die by 1000, keep it in milliseconds
+			// Don't divide time_to_die by 1000
 			if ((current_time - input->philosophers[i].last_meal_time) > input->time_to_die)
 			{
 				printf("%ld %d died\n", current_time - input->start_time, input->philosophers[i].philo_id);

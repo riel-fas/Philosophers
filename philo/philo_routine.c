@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 00:00:14 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:20:43 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:24:24 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	eat(t_philosopher *philo)
 	print_status(philo, "is eating");
 	// Update last meal time
 	philo->last_meal_time = get_current_time();
-	// Don't divide time_to_eat by 1000
+	// Remove the division by 1000
 	precise_sleep(input->time_to_eat);
 	// Increment meal count
 	philo->meal_count++;
@@ -78,7 +78,7 @@ void	release_forks(t_philosopher *philo)
 	pthread_mutex_unlock(&(philo->right_fork->fork_mutex));
 	pthread_mutex_unlock(&(philo->left_fork->fork_mutex));
 	print_status(philo, "is sleeping");
-	// Don't divide time_to_sleep by 1000
+	// Remove the division by 1000
 	precise_sleep(philo->input->time_to_sleep);
 }
 

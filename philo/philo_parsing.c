@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:30:56 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:19:14 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/06 03:23:52 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	check_input(const char *str)
 		str++;
 	while (*str)
 	{
-		if (!(*str >= '0' && *str <= '9')) // Use character digits, not numeric values
+		if (!(*str >= '0' && *str <= '9')) // Fix the character comparison
 			return (1);
 		str++;
 	}
