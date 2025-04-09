@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:30:56 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:23:52 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:36:46 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,30 +184,19 @@ int	atoi_v2(const char *str)
 
 int	input_pars(int ac, char **av, t_args *input)
 {
-	// First check if we have the correct number of arguments
-	if (ac < 5 || ac > 6)
-	{
-		printf("Usage: ./philo <number_of_philosophers> <time_to_die> ");
-		printf("<time_to_eat> <time_to_sleep> ");
-		printf("[number_of_times_each_philosopher_must_eat]\n");
-		return (1);
-	}
-
-	input->philo_nbr = atoi_v2(av[1]);
-	input->time_to_die = atoi_v2(av[2]);
-	input->time_to_eat = atoi_v2(av[3]);
-	input->time_to_sleep = atoi_v2(av[4]);
-	if (ac == 6)
+	input->philo_nbr = atoi_v2(av[1]) ;
+	input->time_to_die = atoi_v2(av[2]) * 1000;
+	input->time_to_eat = atoi_v2(av[3]) * 1000;
+	input->time_to_sleep = atoi_v2(av[4]) * 1000;
+	if (input->time_to_die < 60000 || input->time_to_eat < 60000 || input->time_to_sleep < 60000)
+		error_mes_exit("⛔️ERROR: Time values must be at least 60ms⛔️");
+	else if (ac == 6)
 		input->meals_limit = atoi_v2(av[5]);
 	else
-		input->meals_limit = -1;
-
-	// Remove the excessive restrictions - just check if values are positive
-	if (input->philo_nbr <= 0 || input->philo_nbr > 200 ||
-	    input->time_to_die <= 0 || input->time_to_eat <= 0 ||
-	    input->time_to_sleep <= 0 || (ac == 6 && input->meals_limit <= 0))
+		input->meals_limit = 0;
+	if (input->philo_nbr <= 0 || input->philo_nbr > 200 || input->time_to_die <= 0 || input->time_to_eat <= 0 || input->time_to_sleep <= 0 || (ac == 6 && input->meals_limit <= 0))
 	{
-		printf("Invalid arguments\n");
+		printf("Invalid arguments\n⛔️");
 		return (1);
 	}
 	return (0);

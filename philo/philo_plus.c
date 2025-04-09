@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:12:13 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 03:02:14 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:07:26 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,3 +119,4 @@ void	precise_sleep(long milliseconds)
 	while ((get_current_time() - start_time) < milliseconds)
 		usleep(100); // Sleep in small intervals for more precision
 }
+

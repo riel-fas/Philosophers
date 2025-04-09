@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:11:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 06:41:21 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:03:38 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ void	precise_sleep(long milliseconds);
 void	print_status(t_philosopher *philo, char *status);
 void	monitor_philosophers(t_args *input);
 void	cleanup_resources(t_args *input);
+
+
+void	print_error(char *str);
 
 #endif
 
