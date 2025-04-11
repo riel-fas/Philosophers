@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:11:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/09 17:03:38 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:53:16 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_philosopher
 {
 	int				philo_id;
 	int				meal_count;
-	int				full;
+	bool				full;
 	long			last_meal_time;
 	pthread_t		thread_id;
 	t_fork			*right_fork;

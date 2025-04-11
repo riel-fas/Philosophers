@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_action.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 21:51:57 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/06 06:50:43 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:06:56 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ void monitor_philosophers(t_args *input)
         {
             current_time = get_current_time();
             // Check if philosopher died
-            if ((current_time - input->philosophers[i].last_meal_time) > input->time_to_die)
+            if ((current_time - input->philosophers[i].last_meal_time) > input->time_to_die / 1000)
             {
                 print_status(&input->philosophers[i], "died");
                 input->simulation_off = true;

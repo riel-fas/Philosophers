@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:30:56 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/09 17:36:46 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:46:48 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,10 @@ int	atoi_v2(const char *str)
 int	input_pars(int ac, char **av, t_args *input)
 {
 	input->philo_nbr = atoi_v2(av[1]) ;
-	input->time_to_die = atoi_v2(av[2]) * 1000;
-	input->time_to_eat = atoi_v2(av[3]) * 1000;
-	input->time_to_sleep = atoi_v2(av[4]) * 1000;
-	if (input->time_to_die < 60000 || input->time_to_eat < 60000 || input->time_to_sleep < 60000)
+	input->time_to_die = atoi_v2(av[2]);
+	input->time_to_eat = atoi_v2(av[3]);
+	input->time_to_sleep = atoi_v2(av[4]);
+	if (input->time_to_die < 60|| input->time_to_eat < 60 || input->time_to_sleep < 60)
 		error_mes_exit("⛔️ERROR: Time values must be at least 60ms⛔️");
 	else if (ac == 6)
 		input->meals_limit = atoi_v2(av[5]);

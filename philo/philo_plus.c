@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 03:12:13 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/09 17:07:26 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:41:09 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,10 @@ void	print_status(t_philosopher *philo, char *status)
 }
 
 // More precise sleep function
-void	precise_sleep(long milliseconds)
+void precise_sleep(long milliseconds)
 {
-	long	start_time;
-
-	start_time = get_current_time();
-	while ((get_current_time() - start_time) < milliseconds)
-		usleep(100); // Sleep in small intervals for more precision
+    long start_time = get_current_time();
+    while ((get_current_time() - start_time) < milliseconds)
+        usleep(100); // Sleep in small intervals for more precision
 }
 
