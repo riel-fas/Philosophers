@@ -48,7 +48,8 @@ SRCS			=	philo_main.c \
 					philo_plus.c \
 					philo_parsing.c \
 					philo_action.c \
-					philo_routine.c
+					philo_routine.c \
+
 
 OBJS			=	${SRCS:.c=.o}
 

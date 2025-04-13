@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/13 04:15:33 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/13 05:05:03 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ void	pick_forks(t_philosopher *philo);
 void	eat(t_philosopher *philo);
 void	release_forks(t_philosopher *philo);
 void	*philosopher_routine(void *arg);
+
 
 #endif
