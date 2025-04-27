@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo_action.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/13 05:21:10 by riel-fas         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 
 void	init_forks(t_args *input)
@@ -83,8 +71,15 @@ void	philo_act(t_args *input)
 	}
 
 	// Initialize mutexes for thread safety
-	pthread_mutex_init(&input->print_mutex, NULL);
-	pthread_mutex_init(&input->status_mutex, NULL);
+	if (pthread_mutex_init(&input->print_mutex, NULL) != 0)
+		error_mes_exit("PRINT MUTEX INIT ERROR\n");
+	if (pthread_mutex_init(&input->status_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&input->print_mutex);
+		free(input->philosophers);
+		free(input->forks);
+		error_mes_exit("STATUS MUTEX INIT ERROR\n");
+	}
 
 	init_forks(input);
 	init_philosophers(input);
@@ -121,9 +116,9 @@ void	monitor_philosophers(t_args *input)
 			if (time_since_meal > input->time_to_die)
 			{
 				print_status(&input->philosophers[i], "died");
-				pthread_mutex_lock(&input->print_mutex);
+				pthread_mutex_lock(&input->status_mutex);
 				input->simulation_off = true;
-				pthread_mutex_unlock(&input->print_mutex);
+				pthread_mutex_unlock(&input->status_mutex);
 				break;
 			}
 
@@ -136,9 +131,9 @@ void	monitor_philosophers(t_args *input)
 		}
 		if (input->meals_limit > 0 && all_full)
 		{
-			pthread_mutex_lock(&input->print_mutex);
+			pthread_mutex_lock(&input->status_mutex);
 			input->simulation_off = true;
-			pthread_mutex_unlock(&input->print_mutex);
+			pthread_mutex_unlock(&input->status_mutex);
 		}
 		usleep(1000);
 	}

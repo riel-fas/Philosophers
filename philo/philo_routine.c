@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo_routine.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/13 05:21:40 by riel-fas         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 
 void	pick_forks(t_philosopher *philo)
@@ -91,9 +79,9 @@ void	*philosopher_routine(void *arg)
 	// Main philosopher loop
 	while (1)
 	{
-		pthread_mutex_lock(&input->print_mutex);
+		pthread_mutex_lock(&input->status_mutex);
 		simulation_active = !input->simulation_off;
-		pthread_mutex_unlock(&input->print_mutex);
+		pthread_mutex_unlock(&input->status_mutex);
 
 		if (!simulation_active)
 			break;
@@ -101,9 +89,9 @@ void	*philosopher_routine(void *arg)
 		print_status(philo, "is thinking");
 		pick_forks(philo);
 
-		pthread_mutex_lock(&input->print_mutex);
+		pthread_mutex_lock(&input->status_mutex);
 		simulation_active = !input->simulation_off;
-		pthread_mutex_unlock(&input->print_mutex);
+		pthread_mutex_unlock(&input->status_mutex);
 
 		if (!simulation_active)
 		{
