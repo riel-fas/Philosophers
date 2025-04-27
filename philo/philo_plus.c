@@ -44,11 +44,11 @@ void	print_status(t_philosopher *philo, char *status)
 ///ad a condition in usleep function to check if a philosopher died
 
 
+// #include "philosophers.h"
+
 void	precise_sleep(long milliseconds, t_args *input)
 {
-	long	start_time;
-
-	start_time = get_current_time();
+	long	start_time = get_current_time();
 	while ((get_current_time() - start_time) < milliseconds)
 	{
 		pthread_mutex_lock(&input->status_mutex);

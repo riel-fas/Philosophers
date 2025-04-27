@@ -19,28 +19,47 @@ void	pick_forks(t_philosopher *philo)
 	}
 }
 
+#include "philosophers.h"
+
 void	eat(t_philosopher *philo)
 {
-	t_args	*input;
-
-	input = philo->input;
+	t_args	*input = philo->input;
 	print_status(philo, "is eating");
 
-	// Update last meal time safely
+	// Update last meal time and meal count as soon as eating starts
 	pthread_mutex_lock(&input->status_mutex);
 	philo->last_meal_time = get_current_time();
-	pthread_mutex_unlock(&input->status_mutex);
-
-	// Sleep for eating duration
-	// precise_sleep(input->time_to_eat);
-	precise_sleep(input->time_to_eat, input);
-	// Update meal count safely
-	pthread_mutex_lock(&input->status_mutex);
 	philo->meal_count++;
 	if (input->meals_limit > 0 && philo->meal_count >= input->meals_limit)
 		philo->full = 1;
 	pthread_mutex_unlock(&input->status_mutex);
+
+	// Sleep for eating duration
+	precise_sleep(input->time_to_eat, input);
 }
+
+// void	eat(t_philosopher *philo)
+// {
+// 	t_args	*input;
+
+// 	input = philo->input;
+// 	print_status(philo, "is eating");
+
+// 	// Update last meal time safely
+// 	pthread_mutex_lock(&input->status_mutex);
+// 	philo->last_meal_time = get_current_time();
+// 	pthread_mutex_unlock(&input->status_mutex);
+
+// 	// Sleep for eating duration
+// 	// precise_sleep(input->time_to_eat);
+// 	precise_sleep(input->time_to_eat, input);
+// 	// Update meal count safely
+// 	pthread_mutex_lock(&input->status_mutex);
+// 	philo->meal_count++;
+// 	if (input->meals_limit > 0 && philo->meal_count >= input->meals_limit)
+// 		philo->full = 1;
+// 	pthread_mutex_unlock(&input->status_mutex);
+// }
 
 void	release_forks(t_philosopher *philo)
 {

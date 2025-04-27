@@ -42,7 +42,7 @@
 NAME			=	philo
 
 CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror
+CFLAGS			=	-Wall -Wextra -Werror #-fsanitize=address
 
 SRCS			=	philo_main.c \
 					philo_plus.c \

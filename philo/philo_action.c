@@ -94,50 +94,101 @@ void	philo_act(t_args *input)
 	}
 	cleanup_resources(input);
 }
+// ...other includes...
+#include "philosophers.h"
 
-void	monitor_philosophers(t_args *input)
+// Correct function signature for pthread
+// ...other includes...
+#include "philosophers.h"
+
+// Correct function signature for pthread
+void *monitor_philosophers(void *arg)
 {
-	int		i;
-	int		all_full;
-	long	current_time;
-	long	time_since_meal;
+    t_args *input = (t_args *)arg;
+    int i, full_philos;
+    long now;
 
-	while (!input->simulation_off)
-	{
-		all_full = 1;
-		i = 0;
-		while (i < input->philo_nbr)
-		{
-			pthread_mutex_lock(&input->status_mutex);
-			current_time = get_current_time();
-			time_since_meal = current_time - input->philosophers[i].last_meal_time;
-			pthread_mutex_unlock(&input->status_mutex);
+    while (1)
+    {
+        full_philos = 0;
+        for (i = 0; i < input->philo_nbr; i++)
+        {
+            pthread_mutex_lock(&input->status_mutex);
+            if (input->meals_limit > 0 && input->philosophers[i].meal_count >= input->meals_limit)
+                full_philos++;
+            pthread_mutex_unlock(&input->status_mutex);
+        }
+        if (input->meals_limit > 0 && full_philos == input->philo_nbr)
+        {
+            pthread_mutex_lock(&input->status_mutex);
+            input->simulation_off = 1;
+            pthread_mutex_unlock(&input->status_mutex);
+            break;
+        }
 
-			if (time_since_meal > input->time_to_die)
-			{
-				print_status(&input->philosophers[i], "died");
-				pthread_mutex_lock(&input->status_mutex);
-				input->simulation_off = true;
-				pthread_mutex_unlock(&input->status_mutex);
-				break;
-			}
-
-			pthread_mutex_lock(&input->status_mutex);
-			if (input->meals_limit > 0 && input->philosophers[i].meal_count < input->meals_limit)
-				all_full = 0;
-			pthread_mutex_unlock(&input->status_mutex);
-
-			i++;
-		}
-		if (input->meals_limit > 0 && all_full)
-		{
-			pthread_mutex_lock(&input->status_mutex);
-			input->simulation_off = true;
-			pthread_mutex_unlock(&input->status_mutex);
-		}
-		usleep(1000);
-	}
+        for (i = 0; i < input->philo_nbr; i++)
+        {
+            pthread_mutex_lock(&input->status_mutex);
+            now = get_current_time();
+            if (!input->simulation_off &&
+                (now - input->philosophers[i].last_meal_time > input->time_to_die))
+            {
+                print_status(&input->philosophers[i], "died");
+                input->simulation_off = 1;
+                pthread_mutex_unlock(&input->status_mutex);
+                return NULL;
+            }
+            pthread_mutex_unlock(&input->status_mutex);
+        }
+        usleep(500);
+    }
+    return NULL;
 }
+
+
+// void	monitor_philosophers(t_args *input)
+// {
+// 	int		i;
+// 	int		all_full;
+// 	long	current_time;
+// 	long	time_since_meal;
+
+// 	while (!input->simulation_off)
+// 	{
+// 		all_full = 1;
+// 		i = 0;
+// 		while (i < input->philo_nbr)
+// 		{
+// 			pthread_mutex_lock(&input->status_mutex);
+// 			current_time = get_current_time();
+// 			time_since_meal = current_time - input->philosophers[i].last_meal_time;
+// 			pthread_mutex_unlock(&input->status_mutex);
+
+// 			if (time_since_meal > input->time_to_die)
+// 			{
+// 				print_status(&input->philosophers[i], "died");
+// 				pthread_mutex_lock(&input->status_mutex);
+// 				input->simulation_off = true;
+// 				pthread_mutex_unlock(&input->status_mutex);
+// 				break;
+// 			}
+
+// 			pthread_mutex_lock(&input->status_mutex);
+// 			if (input->meals_limit > 0 && input->philosophers[i].meal_count < input->meals_limit)
+// 				all_full = 0;
+// 			pthread_mutex_unlock(&input->status_mutex);
+
+// 			i++;
+// 		}
+// 		if (input->meals_limit > 0 && all_full)
+// 		{
+// 			pthread_mutex_lock(&input->status_mutex);
+// 			input->simulation_off = true;
+// 			pthread_mutex_unlock(&input->status_mutex);
+// 		}
+// 		usleep(1000);
+// 	}
+// }
 
 void	cleanup_resources(t_args *input)
 {
