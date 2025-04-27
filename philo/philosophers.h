@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/13 05:05:03 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/27 15:26:03 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ int		main(int ac, char **av);
 void	error_mes_exit(char *error);
 long	get_current_time(void);
 void	print_status(t_philosopher *philo, char *status);
-void	precise_sleep(long milliseconds);
+// void	precise_sleep(long milliseconds);
+void	precise_sleep(long milliseconds, t_args *input);
+
 
 /* philo_parsing.c */
 int		check_input(const char *str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_time.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 23:58:13 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/13 05:21:44 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/27 15:28:46 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ long	get_current_time(void)
 
 // Sleep for a specified number of milliseconds
 // In philo_time.c
-void precise_sleep(long milliseconds)
-{
-    long start = get_current_time();
+// void precise_sleep(long milliseconds)
+// {
+//     long start = get_current_time();
 
-    while ((get_current_time() - start) < milliseconds)
-    {
-        usleep(500); // Smaller sleep value for better precision
-    }
-}
+//     while ((get_current_time() - start) < milliseconds)
+//     {
+//         usleep(500); // Smaller sleep value for better precision
+//     }
+// }
 
 // Print philosopher status with timestamp
 

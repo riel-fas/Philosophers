@@ -32,13 +32,32 @@ void	print_status(t_philosopher *philo, char *status)
 }
 
 // More precise sleep function
-void	precise_sleep(long milliseconds)
+// void	precise_sleep(long milliseconds)
+// {
+// 	long	start_time;
+
+// 	start_time = get_current_time();
+// 	while ((get_current_time() - start_time) < milliseconds)
+// 		usleep(100); // Sleep in small intervals for more precision
+// }
+///remove exit
+///ad a condition in usleep function to check if a philosopher died
+
+
+void	precise_sleep(long milliseconds, t_args *input)
 {
 	long	start_time;
 
 	start_time = get_current_time();
 	while ((get_current_time() - start_time) < milliseconds)
-		usleep(100); // Sleep in small intervals for more precision
+	{
+		pthread_mutex_lock(&input->status_mutex);
+		if (input->simulation_off)
+		{
+			pthread_mutex_unlock(&input->status_mutex);
+			break;
+		}
+		pthread_mutex_unlock(&input->status_mutex);
+		usleep(100);
+	}
 }
-///remove exit
-///ad a condition in usleep function to check if a philosopher died

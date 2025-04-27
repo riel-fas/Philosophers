@@ -32,8 +32,8 @@ void	eat(t_philosopher *philo)
 	pthread_mutex_unlock(&input->status_mutex);
 
 	// Sleep for eating duration
-	precise_sleep(input->time_to_eat);
-
+	// precise_sleep(input->time_to_eat);
+	precise_sleep(input->time_to_eat, input);
 	// Update meal count safely
 	pthread_mutex_lock(&input->status_mutex);
 	philo->meal_count++;
@@ -47,7 +47,7 @@ void	release_forks(t_philosopher *philo)
 	pthread_mutex_unlock(&(philo->right_fork->fork_mutex));
 	pthread_mutex_unlock(&(philo->left_fork->fork_mutex));
 	print_status(philo, "is sleeping");
-	precise_sleep(philo->input->time_to_sleep);
+	precise_sleep(philo->input->time_to_sleep, philo->input);
 }
 
 void	*philosopher_routine(void *arg)
@@ -68,13 +68,13 @@ void	*philosopher_routine(void *arg)
 	if (input->philo_nbr == 1)
 	{
 		print_status(philo, "has taken a fork");
-		precise_sleep(input->time_to_die);
+		precise_sleep(input->time_to_die, input);
 		return (NULL);
 	}
 
 	// Stagger philosophers to prevent deadlock
 	if (philo->philo_id % 2 == 0)
-		precise_sleep(input->time_to_eat / 2);
+		precise_sleep(input->time_to_eat / 2, input);
 
 	// Main philosopher loop
 	while (1)
