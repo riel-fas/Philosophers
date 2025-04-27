@@ -40,3 +40,5 @@ void	precise_sleep(long milliseconds)
 	while ((get_current_time() - start_time) < milliseconds)
 		usleep(100); // Sleep in small intervals for more precision
 }
+///remove exit
+///ad a condition in usleep function to check if a philosopher died
