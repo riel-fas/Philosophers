@@ -1,3 +1,68 @@
+// #include "philosophers.h"
+
+// void	error_mes_exit(char *error)
+// {
+// 	printf("%s\n", error);
+// 	exit(EXIT_FAILURE);
+// }
+
+// // Get current time in milliseconds
+// long	get_current_time(void)
+// {
+// 	struct timeval	time;
+
+// 	gettimeofday(&time, NULL);
+// 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+// }
+
+// // Print philosopher status with timestamp
+// void	print_status(t_philosopher *philo, char *status)
+// {
+// 	long	timestamp;
+
+// 	pthread_mutex_lock(&philo->input->print_mutex);
+// 	if (philo->input->simulation_off)
+// 	{
+// 		pthread_mutex_unlock(&philo->input->print_mutex);
+// 		return;
+// 	}
+// 	timestamp = get_current_time() - philo->input->start_time;
+// 	printf("%ld %d %s\n", timestamp, philo->philo_id, status);
+// 	pthread_mutex_unlock(&philo->input->print_mutex);
+// }
+
+// // More precise sleep function
+// // void	precise_sleep(long milliseconds)
+// // {
+// // 	long	start_time;
+
+// // 	start_time = get_current_time();
+// // 	while ((get_current_time() - start_time) < milliseconds)
+// // 		usleep(100); // Sleep in small intervals for more precision
+// // }
+// ///remove exit
+// ///ad a condition in usleep function to check if a philosopher died
+
+
+// // #include "philosophers.h"
+
+// void	precise_sleep(long milliseconds, t_args *input)
+// {
+// 	long	start_time = get_current_time();
+// 	while ((get_current_time() - start_time) < milliseconds)
+// 	{
+// 		pthread_mutex_lock(&input->status_mutex);
+// 		if (input->simulation_off)
+// 		{
+// 			pthread_mutex_unlock(&input->status_mutex);
+// 			break;
+// 		}
+// 		pthread_mutex_unlock(&input->status_mutex);
+// 		usleep(100);
+// 	}
+// }
+
+
 #include "philosophers.h"
 
 void	error_mes_exit(char *error)
@@ -11,7 +76,8 @@ long	get_current_time(void)
 {
 	struct timeval	time;
 
-	gettimeofday(&time, NULL);
+	if (gettimeofday(&time, NULL) != 0)
+		error_mes_exit("Error getting time");
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
@@ -19,45 +85,39 @@ long	get_current_time(void)
 void	print_status(t_philosopher *philo, char *status)
 {
 	long	timestamp;
+	int		should_print;
 
 	pthread_mutex_lock(&philo->input->print_mutex);
-	if (philo->input->simulation_off)
+	pthread_mutex_lock(&philo->input->status_mutex);
+	should_print = !philo->input->simulation_off;
+	pthread_mutex_unlock(&philo->input->status_mutex);
+
+	if (should_print)
 	{
-		pthread_mutex_unlock(&philo->input->print_mutex);
-		return;
+		timestamp = get_current_time() - philo->input->start_time;
+		printf("%ld %d %s\n", timestamp, philo->philo_id, status);
 	}
-	timestamp = get_current_time() - philo->input->start_time;
-	printf("%ld %d %s\n", timestamp, philo->philo_id, status);
 	pthread_mutex_unlock(&philo->input->print_mutex);
 }
 
-// More precise sleep function
-// void	precise_sleep(long milliseconds)
-// {
-// 	long	start_time;
-
-// 	start_time = get_current_time();
-// 	while ((get_current_time() - start_time) < milliseconds)
-// 		usleep(100); // Sleep in small intervals for more precision
-// }
-///remove exit
-///ad a condition in usleep function to check if a philosopher died
-
-
-// #include "philosophers.h"
-
+// More precise sleep function with early exit if simulation ends
 void	precise_sleep(long milliseconds, t_args *input)
 {
-	long	start_time = get_current_time();
+	long	start_time;
+	int		should_continue;
+
+	start_time = get_current_time();
 	while ((get_current_time() - start_time) < milliseconds)
 	{
 		pthread_mutex_lock(&input->status_mutex);
-		if (input->simulation_off)
-		{
-			pthread_mutex_unlock(&input->status_mutex);
-			break;
-		}
+		should_continue = !input->simulation_off;
 		pthread_mutex_unlock(&input->status_mutex);
-		usleep(100);
+
+		if (!should_continue)
+			return;
+
+		// Sleep in smaller intervals for more responsive simulation
+		// and more accurate timing
+		usleep(500);
 	}
 }

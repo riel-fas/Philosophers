@@ -42,13 +42,14 @@
 NAME			=	philo
 
 CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror #-fsanitize=address
+CFLAGS			=	-Wall -Wextra -Werror -fsanitize=thread
 
 SRCS			=	philo_main.c \
 					philo_plus.c \
 					philo_parsing.c \
 					philo_action.c \
 					philo_routine.c \
+					# philo_monitor.c
 
 
 OBJS			=	${SRCS:.c=.o}
