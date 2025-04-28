@@ -1,4 +1,4 @@
-#include "philosophers.h"
+// #include "philosophers.h"
 
 void monitor_philosophers(t_args *input)
 {
