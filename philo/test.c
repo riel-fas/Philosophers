@@ -37,7 +37,7 @@
 // 	cleanup_resources(input);
 // }
 
-# include "philosophers.h"
+// # include "philosophers.h"
 #include <stdlib.h>
 #include <pthread.h>
 // #include "philo.h" // Assuming necessary headers are included here

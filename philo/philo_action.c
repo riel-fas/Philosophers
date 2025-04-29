@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 15:50:51 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/29 09:06:06 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:44:59 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,58 @@ void	create_threads(t_args *input)
 	}
 }
 
+
+// void	philo_act(t_args *input)
+// {
+//     int	i;
+
+//     init_resources(input);
+//     init_mutexes(input);
+//     start_simulation(input);
+//     i = 0;
+//     while (i < input->philo_nbr)
+//         pthread_join(input->philosophers[i++].thread_id, NULL);
+//     cleanup_resources(input);
+// }
+//////////////////////////////////////////
+////////////////////////////////////
+
 void	philo_act(t_args *input)
 {
 	int	i;
 
-	init_resources(input);
-	init_mutexes(input);
-	start_simulation(input);
-	i = 0;
-	while (i < input->philo_nbr)
-		pthread_join(input->philosophers[i++].thread_id, NULL);
+	input->simulation_off = false;
+	input->philosophers = malloc(sizeof(t_philosopher) * input->philo_nbr);
+	if (!input->philosophers)
+		error_mes_exit("MALLOC ERROR\n");
+	input->forks = malloc(sizeof(t_fork) * input->philo_nbr);
+	if (!input->forks)
+	{
+		free(input->philosophers);
+		error_mes_exit("MALLOC ERROR\n");
+	}
+	if (pthread_mutex_init(&input->print_mutex, NULL) != 0)
+	{
+		free(input->philosophers);
+		free(input->forks);
+		error_mes_exit("PRINT MUTEX INIT ERROR\n");
+	}
+	if (pthread_mutex_init(&input->status_mutex, NULL) != 0)
+	{
+		pthread_mutex_destroy(&input->print_mutex);
+		free(input->philosophers);
+		free(input->forks);
+		error_mes_exit("STATUS MUTEX INIT ERROR\n");
+	}
+	init_forks(input);
+	init_philosophers(input);
+	input->start_time = get_current_time();
+	create_threads(input);
+	monitor_philosophers(input);
+	for (i = 0; i < input->philo_nbr; i++)
+	{
+		pthread_join(input->philosophers[i].thread_id, NULL);
+	}
 	cleanup_resources(input);
 }
 
