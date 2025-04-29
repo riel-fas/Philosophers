@@ -84,3 +84,81 @@ void	monitor_philosophers(t_args *input)
 		usleep(1000);
 	}
 }
+
+
+
+
+
+
+
+
+
+// Check if a philosopher has died
+static int	check_philosopher_death(t_args *input, int i)
+{
+    long	now;
+    long	time_since_meal;
+
+    pthread_mutex_lock(&input->status_mutex);
+    now = get_current_time();
+    time_since_meal = now - input->philosophers[i].last_meal_time;
+    if (!input->simulation_off && time_since_meal > input->time_to_die)
+    {
+        input->simulation_off = true;
+        pthread_mutex_unlock(&input->status_mutex);
+        pthread_mutex_lock(&input->print_mutex);
+        printf("%ld %d %s\n", now - input->start_time,
+            input->philosophers[i].philo_id, "died");
+        pthread_mutex_unlock(&input->print_mutex);
+        return (1);
+    }
+    pthread_mutex_unlock(&input->status_mutex);
+    return (0);
+}
+
+// Check if all philosophers are full
+static int	check_all_philosophers_full(t_args *input)
+{
+    int	i;
+    int	full_philos;
+
+    full_philos = 0;
+    i = 0;
+    while (i < input->philo_nbr)
+    {
+        pthread_mutex_lock(&input->status_mutex);
+        if (input->meals_limit > 0 &&
+            input->philosophers[i].meal_count >= input->meals_limit)
+            full_philos++;
+        pthread_mutex_unlock(&input->status_mutex);
+        i++;
+    }
+    return (full_philos == input->philo_nbr);
+}
+
+
+void	monitor_philosophers(t_args *input)
+{
+    int	i;
+
+    while (1)
+    {
+        i = 0;
+        while (i < input->philo_nbr)
+        {
+            if (check_philosopher_death(input, i))
+                return;
+            i++;
+        }
+
+        pthread_mutex_lock(&input->status_mutex);
+        if (input->meals_limit > 0 && check_all_philosophers_full(input))
+        {
+            input->simulation_off = true;
+            pthread_mutex_unlock(&input->status_mutex);
+            return;
+        }
+        pthread_mutex_unlock(&input->status_mutex);
+        usleep(1000);
+    }
+}
