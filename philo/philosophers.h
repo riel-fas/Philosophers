@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/28 09:54:19 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:02:56 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	init_philosophers(t_args *input);
 void	create_threads(t_args *input);
 void	philo_act(t_args *input);
 void	monitor_philosophers(t_args *input);
+
 // void *monitor_philosophers(void *arg);
 
 void	cleanup_resources(t_args *input);
@@ -87,6 +88,11 @@ void	pick_forks(t_philosopher *philo);
 void	eat(t_philosopher *philo);
 void	release_forks(t_philosopher *philo);
 void	*philosopher_routine(void *arg);
+
+void	init_resources(t_args *input);
+void	init_mutexes(t_args *input);
+void	start_simulation(t_args *input);
+
 
 
 #endif
