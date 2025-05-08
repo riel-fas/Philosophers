@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:25:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/29 11:45:02 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:18:49 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,3 +51,6 @@ void	start_simulation(t_args *input)
     create_threads(input);
     monitor_philosophers(input);
 }
+
+
+// void coicocicoicoicoi
