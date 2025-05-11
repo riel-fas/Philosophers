@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/29 11:45:09 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:01:12 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,40 +21,48 @@
 # include <sys/time.h>
 # include <limits.h>
 
-typedef struct s_fork
-{
-	int				fork_id;
-	pthread_mutex_t	fork_mutex;
-}	t_fork;
+typedef enum e_status {
+    FORK_TAKEN,
+    EATING,
+    SLEEPING,
+    THINKING,
+    DIED
+} t_status;
+
+typedef struct s_fork {
+    int             fork_id;
+    pthread_mutex_t fork_mutex;
+} t_fork;
 
 typedef struct s_args t_args;
 
-typedef struct s_philosopher
-{
-	int				philo_id;
-	int				meal_count;
-	int				full;
-	long			last_meal_time;
-	pthread_t		thread_id;
-	t_fork			*right_fork;
-	t_fork			*left_fork;
-	t_args			*input;
-}	t_philosopher;
+typedef struct s_philosopher {
+    int             philo_id;
+    int             meal_count;
+    bool            full;
+    long            last_meal_time;
+    pthread_t       thread_id;
+    t_fork          *right_fork;
+    t_fork          *left_fork;
+    t_args          *input;
+    pthread_mutex_t meal_mutex;
+    pthread_mutex_t last_meal_mutex;
+} t_philosopher;
 
-typedef struct s_args
-{
-	int				philo_nbr;
-	long			time_to_die;
-	long			time_to_eat;
-	long			time_to_sleep;
-	int				meals_limit;
-	long			start_time;
-	bool			simulation_off;
-	t_philosopher	*philosophers;
-	t_fork			*forks;
-	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	status_mutex;
-}	t_args;
+typedef struct s_args {
+    int             philo_nbr;
+    long            time_to_die;
+    long            time_to_eat;
+    long            time_to_sleep;
+    int             meals_limit;
+    long            start_time;
+    bool            simulation_off;
+    t_philosopher   *philosophers;
+    t_fork          *forks;
+    pthread_mutex_t print_mutex;
+    pthread_mutex_t death_mutex;
+    pthread_mutex_t full_mutex;
+} t_args;
 
 /* philo_main.c */
 int		main(int ac, char **av);
@@ -93,6 +101,12 @@ void	*philosopher_routine(void *arg);
 // void	init_mutexes(t_args *input);
 // void	start_simulation(t_args *input);
 
+void    set_last_meal_time(t_philosopher *philo);
+long    get_last_meal_time(t_philosopher *philo);
+void    set_simulation_off(t_args *input, bool state);
+bool    get_simulation_off(t_args *input);
+void    set_philo_full(t_philosopher *philo, bool state);
+bool    get_philo_full(t_philosopher *philo);
 
 
 #endif

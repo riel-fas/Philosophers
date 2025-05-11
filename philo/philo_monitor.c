@@ -6,68 +6,85 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 15:51:32 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/11 09:56:52 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:01:45 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+#include "philosophers.h"
 
-void	monitor_philosophers(t_args *input)
+static bool check_philosopher_death(t_args *input, int i)
 {
-    int		i;
-    int		full_philos;
-    long	now;
-    long	time_since_meal;
+    long    current_time;
+    long    time_since_meal;
+
+    pthread_mutex_lock(&input->philosophers[i].last_meal_mutex);
+    current_time = get_current_time();
+    time_since_meal = current_time - input->philosophers[i].last_meal_time;
+    pthread_mutex_unlock(&input->philosophers[i].last_meal_mutex);
+
+    if (time_since_meal > input->time_to_die)
+    {
+        pthread_mutex_lock(&input->death_mutex);
+        input->simulation_off = true;
+        pthread_mutex_unlock(&input->death_mutex);
+
+        pthread_mutex_lock(&input->print_mutex);
+        printf("%ld %d died\n", current_time - input->start_time,
+              input->philosophers[i].philo_id);
+        pthread_mutex_unlock(&input->print_mutex);
+        return (true);
+    }
+    return (false);
+}
+
+static bool check_all_full(t_args *input)
+{
+    int i;
+    int full_count;
+
+    i = 0;
+    full_count = 0;
+    while (i < input->philo_nbr)
+    {
+        pthread_mutex_lock(&input->philosophers[i].meal_mutex);
+        if (input->philosophers[i].full ||
+           (input->meals_limit > 0 &&
+            input->philosophers[i].meal_count >= input->meals_limit))
+        {
+            input->philosophers[i].full = true;
+            full_count++;
+        }
+        pthread_mutex_unlock(&input->philosophers[i].meal_mutex);
+        i++;
+    }
+
+    if (full_count == input->philo_nbr)
+    {
+        pthread_mutex_lock(&input->full_mutex);
+        input->simulation_off = true;
+        pthread_mutex_unlock(&input->full_mutex);
+        return (true);
+    }
+    return (false);
+}
+
+void    monitor_philosophers(t_args *input)
+{
+    int i;
 
     while (1)
     {
-        full_philos = 0;
         i = 0;
         while (i < input->philo_nbr)
         {
-            pthread_mutex_lock(&input->status_mutex);
-            // Check if simulation already ended
-            if (input->simulation_off)
-            {
-                pthread_mutex_unlock(&input->status_mutex);
-                return;
-            }
-
-            // Check if this philosopher is full
-            if (input->meals_limit > 0 && input->philosophers[i].meal_count >= input->meals_limit)
-                full_philos++;
-
-            // Check death condition
-            now = get_current_time();
-            time_since_meal = now - input->philosophers[i].last_meal_time;
-
-            if (time_since_meal > input->time_to_die)
-            {
-                input->simulation_off = true;
-                pthread_mutex_unlock(&input->status_mutex);
-
-                pthread_mutex_lock(&input->print_mutex);
-                printf("%ld %d %s\n", now - input->start_time,
-                    input->philosophers[i].philo_id, "died");
-                pthread_mutex_unlock(&input->print_mutex);
-                return;
-            }
-            pthread_mutex_unlock(&input->status_mutex);
+            if (check_philosopher_death(input, i))
+                return ;
             i++;
         }
-
-        // Check if all philosophers are full
-        pthread_mutex_lock(&input->status_mutex);
-        if (input->meals_limit > 0 && full_philos == input->philo_nbr)
-        {
-            input->simulation_off = true;
-            pthread_mutex_unlock(&input->status_mutex);
-            return;
-        }
-        pthread_mutex_unlock(&input->status_mutex);
-
-        // Less aggressive sleeping to spot deaths quicker
-        usleep(500);
+        if (input->meals_limit > 0 && check_all_full(input))
+            return ;
+        usleep(1000);
     }
 }
 
