@@ -29,30 +29,33 @@ typedef struct s_shared {
     long            last_meal;
 } t_shared;
 
-typedef struct s_philo {
-    int             id;
-    pthread_t       thread;
-    t_fork          *left_fork;
-    t_fork          *right_fork;
-    t_shared        shared;
-    struct s_data   *data;
+typedef struct s_philosopher {
+    int             philo_id;
+    int             meal_count;
     bool            full;
-} t_philo;
+    long            last_meal_time;
+    pthread_t       thread_id;
+    t_fork          *right_fork;
+    t_fork          *left_fork;
+    t_args          *input;
+    pthread_mutex_t meal_mutex;
+    pthread_mutex_t last_meal_mutex;
+} t_philosopher;
 
-typedef struct s_data {
-    t_philo         *philos;
+typedef struct s_args {
+    int             philo_nbr;
+    long            time_to_die;
+    long            time_to_eat;
+    long            time_to_sleep;
+    int             meals_limit;
+    long            start_time;
+    bool            simulation_off;
+    t_philosopher   *philosophers;
     t_fork          *forks;
     pthread_mutex_t print_mutex;
     pthread_mutex_t death_mutex;
     pthread_mutex_t full_mutex;
-    long            start_time;
-    int             philo_count;
-    int             time_to_die;
-    int             time_to_eat;
-    int             time_to_sleep;
-    int             meal_limit;
-    bool            sim_stop;
-} t_data;
+} t_args;
 
 /* Core Functions */
 int     init_data(t_data *data, int ac, char **av);
