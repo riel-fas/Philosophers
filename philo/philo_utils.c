@@ -69,7 +69,15 @@ int ft_atoi(const char *str)
     while (*str >= '0' && *str <= '9')
     {
         result = result * 10 + (*str - '0');
+        if (result > INT_MAX)
+            return (sign == 1 ? INT_MAX : INT_MIN);
         str++;
     }
     return (result * sign);
+}
+
+void error_exit(char *msg)
+{
+    printf("Error: %s\n", msg);
+    exit(1);
 }

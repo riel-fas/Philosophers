@@ -7,14 +7,13 @@ NC = \033[0m # No Color
 NAME			=	philo
 
 CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror -fsanitize=thread
+CFLAGS			=	-Wall -Wextra -Werror
 
 SRCS			=	philo_main.c \
-					philo_plus.c \
-					philo_parsing.c \
-					philo_action.c \
+					philo_init.c \
 					philo_routine.c \
-					philo_monitor.c
+					philo_monitor.c \
+					philo_utils.c
 
 OBJS			=	${SRCS:.c=.o}
 
@@ -33,7 +32,7 @@ banner:
 	@echo "$(CYAN)|  _/| __ || || |__| (_) \\__ \\| (_) |  _/| __ | _||   /\\__ \\ $(NC)"
 	@echo "$(CYAN)|_|  |_||_|___|____|\\___/|___/ \\___/|_|  |_||_|___|_|_\\|___/ $(NC)"
 	@echo ""
-	@echo "$(YELLOW)Date: 2025-04-29 10:30:13 (UTC) - User: riel-fas$(NC)"
+	@echo "$(YELLOW)Date: $(shell date '+%Y-%m-%d %H:%M:%S') (UTC) - User: $(USER)$(NC)"
 	@echo ""
 
 $(NAME)	:	$(OBJS)
