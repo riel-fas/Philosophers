@@ -1,127 +1,65 @@
 #include "philosophers.h"
 
-int init_mutexes(t_data *data)
+int	init_mutexes(t_pinfo *pinfo)
 {
-    int i;
-
-    if (pthread_mutex_init(&data->print_mutex, NULL))
-        return (1);
-    if (pthread_mutex_init(&data->death_mutex, NULL))
-    {
-        pthread_mutex_destroy(&data->print_mutex);
-        return (1);
-    }
-    if (pthread_mutex_init(&data->full_mutex, NULL))
-    {
-        pthread_mutex_destroy(&data->print_mutex);
-        pthread_mutex_destroy(&data->death_mutex);
-        return (1);
-    }
-    i = -1;
-    while (++i < data->philo_count)
-    {
-        if (pthread_mutex_init(&data->forks[i].mutex, NULL))
-        {
-            while (--i >= 0)
-                pthread_mutex_destroy(&data->forks[i].mutex);
-            return (1);
-        }
-        data->forks[i].id = i;
-    }
-    return (0);
+	pinfo->print_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!pinfo->print_mutex)
+		return (0);
+	pinfo->died_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!pinfo->died_mutex)
+	{
+		free(pinfo->print_mutex);
+		return (0);
+	}
+	pinfo->full_mutex = malloc(sizeof(pthread_mutex_t));
+	if (!pinfo->full_mutex)
+	{
+		free(pinfo->print_mutex);
+		free(pinfo->died_mutex);
+		return (0);
+	}
+	pthread_mutex_init(pinfo->print_mutex, NULL);
+	pthread_mutex_init(pinfo->died_mutex, NULL);
+	pthread_mutex_init(pinfo->full_mutex, NULL);
+	return (1);
 }
 
-int init_phil_mutexes(t_data *data)
+int	check_params(t_pinfo *pinfo, char *num_eats)
 {
-    int i;
-
-    i = -1;
-    while (++i < data->philo_count)
-    {
-        if (pthread_mutex_init(&data->philos[i].meal_mutex, NULL))
-        {
-            while (--i >= 0)
-            {
-                pthread_mutex_destroy(&data->philos[i].meal_mutex);
-                pthread_mutex_destroy(&data->philos[i].last_meal_mutex);
-            }
-            return (1);
-        }
-        if (pthread_mutex_init(&data->philos[i].last_meal_mutex, NULL))
-        {
-            pthread_mutex_destroy(&data->philos[i].meal_mutex);
-            while (--i >= 0)
-            {
-                pthread_mutex_destroy(&data->philos[i].meal_mutex);
-                pthread_mutex_destroy(&data->philos[i].last_meal_mutex);
-            }
-            return (1);
-        }
-    }
-    return (0);
+	return (pinfo->pnumber <= 0 || pinfo->die_time <= 0 || pinfo->eat_time <= 0
+		|| pinfo->sleep_time <= 0 || (num_eats && pinfo->num_eats <= 0));
 }
 
-int init_data(t_data *data, int ac, char **av)
+int	check_errors(t_pinfo *pinfo, char *num_eats, int error_found)
 {
-    data->philo_count = ft_atoi(av[1]);
-    data->time_to_die = ft_atoi(av[2]);
-    data->time_to_eat = ft_atoi(av[3]);
-    data->time_to_sleep = ft_atoi(av[4]);
-    data->meal_limit = (ac == 6) ? ft_atoi(av[5]) : -1;
-    data->sim_stop = false;
-    data->start_time = get_time();
-
-    if (data->philo_count <= 0 || data->time_to_die <= 0 ||
-        data->time_to_eat <= 0 || data->time_to_sleep <= 0 ||
-        (ac == 6 && data->meal_limit <= 0))
-        return (1);
-
-    data->philos = malloc(sizeof(t_philo) * data->philo_count);
-    data->forks = malloc(sizeof(t_fork) * data->philo_count);
-    if (!data->philos || !data->forks)
-        return (1);
-
-    if (init_mutexes(data))
-    {
-        free(data->philos);
-        free(data->forks);
-        return (1);
-    }
-    return (0);
+	if (check_params(pinfo, num_eats) || error_found)
+	{
+		free(pinfo);
+		return (0);
+	}
+	return (1);
 }
 
-int init_philos(t_data *data)
+int	philo_init(t_pinfo **pinfo, int count, char **data)
 {
-    int i;
+	int	error_found;
 
-    i = -1;
-    while (++i < data->philo_count)
-    {
-        data->philos[i].id = i + 1;
-        data->philos[i].data = data;
-        data->philos[i].meal_count = 0;
-        data->philos[i].full = false;
-        data->philos[i].last_meal = get_time();
-        data->philos[i].left_fork = &data->forks[i];
-        data->philos[i].right_fork = &data->forks[(i + 1) % data->philo_count];
-    }
-
-    if (init_phil_mutexes(data))
-        return (1);
-
-    i = -1;
-    while (++i < data->philo_count)
-    {
-        if (pthread_create(&data->philos[i].thread, NULL, &routine, &data->philos[i]))
-        {
-            pthread_mutex_lock(&data->death_mutex);
-            data->sim_stop = true;
-            pthread_mutex_unlock(&data->death_mutex);
-            i--;
-            while (i >= 0)
-                pthread_join(data->philos[i--].thread, NULL);
-            return (1);
-        }
-    }
-    return (0);
+	error_found = 0;
+	if (count < 4 || count > 5)
+		return (0);
+	*pinfo = malloc(sizeof(t_pinfo));
+	if (!*pinfo)
+		return (0);
+	**pinfo = (t_pinfo){0};
+	(*pinfo)->pnumber = ft_atoi(data[0], &error_found);
+	(*pinfo)->die_time = ft_atoi(data[1], &error_found);
+	(*pinfo)->eat_time = ft_atoi(data[2], &error_found);
+	(*pinfo)->sleep_time = ft_atoi(data[3], &error_found);
+	if (data[4])
+		(*pinfo)->num_eats = ft_atoi(data[4], &error_found);
+	else
+		(*pinfo)->num_eats = -1;
+	if (!check_errors(*pinfo, data[4], error_found))
+		return (0);
+	return (init_mutexes((*pinfo)));
 }

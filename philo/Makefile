@@ -11,9 +11,15 @@ CFLAGS			=	-Wall -Wextra -Werror
 
 SRCS			=	philo_main.c \
 					philo_init.c \
+					philo_manager.c \
+					philo_plus.c \
+					philo_time.c \
+					setters.c \
+					getters.c \
 					philo_routine.c \
 					philo_monitor.c \
-					philo_utils.c
+					timestamp.c \
+					philo_parsing.c
 
 OBJS			=	${SRCS:.c=.o}
 
