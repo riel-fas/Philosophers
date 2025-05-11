@@ -1,41 +1,4 @@
-# NAME			=	philo
-
-# CC				=	cc
-# CFLAGS			=	-Wall -Wextra -Werror -fsanitize=thread
-
-# SRCS			=	philo_main.c \
-# 					philo_plus.c \
-# 					philo_parsing.c \
-# 					philo_action.c \
-# 					philo_action_2.c \
-# 					philo_routine.c \
-# 					philo_monitor.c
-# OBJS			=	${SRCS:.c=.o}
-
-# HEADER			=	philosophers.h
-
-
-# all	:	$(NAME)
-
-# $(NAME)	:	$(OBJS)
-# 		$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-
-# %.o : %.c	$(HEADER)
-# 		$(CC) $(CFLAGS) -c $< -o $@
-
-# clean	:
-# 		rm -rf $(OBJS)
-
-# fclean	:	clean
-# 		rm -rf $(NAME)
-
-# re	:	fclean all
-
-# .phony	:	all clean fclean re
-
-
-
-# Colors for pretty output
+# Colors
 GREEN = \033[0;32m
 YELLOW = \033[0;33m
 CYAN = \033[0;36m
@@ -52,7 +15,6 @@ SRCS			=	philo_main.c \
 					philo_action.c \
 					philo_routine.c \
 					philo_monitor.c
-# philo_action_2.c \
 
 OBJS			=	${SRCS:.c=.o}
 

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philosophers.h                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/11 12:01:12 by riel-fas         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
@@ -30,83 +18,54 @@ typedef enum e_status {
 } t_status;
 
 typedef struct s_fork {
-    int             fork_id;
-    pthread_mutex_t fork_mutex;
+    pthread_mutex_t mutex;
+    int             id;
 } t_fork;
 
-typedef struct s_args t_args;
-
-typedef struct s_philosopher {
-    int             philo_id;
-    int             meal_count;
-    bool            full;
-    long            last_meal_time;
-    pthread_t       thread_id;
-    t_fork          *right_fork;
-    t_fork          *left_fork;
-    t_args          *input;
+typedef struct s_shared {
     pthread_mutex_t meal_mutex;
     pthread_mutex_t last_meal_mutex;
-} t_philosopher;
+    int             meal_count;
+    long            last_meal;
+} t_shared;
 
-typedef struct s_args {
-    int             philo_nbr;
-    long            time_to_die;
-    long            time_to_eat;
-    long            time_to_sleep;
-    int             meals_limit;
-    long            start_time;
-    bool            simulation_off;
-    t_philosopher   *philosophers;
+typedef struct s_philo {
+    int             id;
+    pthread_t       thread;
+    t_fork          *left_fork;
+    t_fork          *right_fork;
+    t_shared        shared;
+    struct s_data   *data;
+    bool            full;
+} t_philo;
+
+typedef struct s_data {
+    t_philo         *philos;
     t_fork          *forks;
     pthread_mutex_t print_mutex;
     pthread_mutex_t death_mutex;
     pthread_mutex_t full_mutex;
-} t_args;
+    long            start_time;
+    int             philo_count;
+    int             time_to_die;
+    int             time_to_eat;
+    int             time_to_sleep;
+    int             meal_limit;
+    bool            sim_stop;
+} t_data;
 
-/* philo_main.c */
-int		main(int ac, char **av);
+/* Core Functions */
+int     init_data(t_data *data, int ac, char **av);
+int     init_philos(t_data *data);
+void    cleanup(t_data *data);
+void    monitor(t_data *data);
+void    *routine(void *arg);
 
-/* philo_plus.c */
-void	error_mes_exit(char *error);
-long	get_current_time(void);
-void	print_status(t_philosopher *philo, char *status);
-// void	precise_sleep(long milliseconds);
-void	precise_sleep(long milliseconds, t_args *input);
-
-
-/* philo_parsing.c */
-int		check_input(const char *str);
-int		atoi_v2(const char *str);
-int		input_pars(int ac, char **av, t_args *input);
-
-/* philo_action.c */
-void	init_forks(t_args *input);
-void	init_philosophers(t_args *input);
-void	create_threads(t_args *input);
-void	philo_act(t_args *input);
-void	monitor_philosophers(t_args *input);
-
-// void *monitor_philosophers(void *arg);
-
-void	cleanup_resources(t_args *input);
-
-/* philo_routine.c */
-void	pick_forks(t_philosopher *philo);
-void	eat(t_philosopher *philo);
-void	release_forks(t_philosopher *philo);
-void	*philosopher_routine(void *arg);
-
-// void	init_resources(t_args *input);
-// void	init_mutexes(t_args *input);
-// void	start_simulation(t_args *input);
-
-void    set_last_meal_time(t_philosopher *philo);
-long    get_last_meal_time(t_philosopher *philo);
-void    set_simulation_off(t_args *input, bool state);
-bool    get_simulation_off(t_args *input);
-void    set_philo_full(t_philosopher *philo, bool state);
-bool    get_philo_full(t_philosopher *philo);
-
+/* Utils */
+long    get_time(void);
+long    elapsed_time(long start);
+void    print_status(t_philo *philo, t_status status);
+void    precise_sleep(long ms, t_data *data);
+int     ft_atoi(const char *str);
 
 #endif

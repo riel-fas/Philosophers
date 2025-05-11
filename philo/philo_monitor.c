@@ -6,84 +6,71 @@
 /*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 15:51:32 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/11 12:01:45 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:20:29 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-#include "philosophers.h"
 
-static bool check_philosopher_death(t_args *input, int i)
+static int check_death(t_data *data, int i)
 {
-    long    current_time;
-    long    time_since_meal;
+    long current;
+    long last_meal;
 
-    pthread_mutex_lock(&input->philosophers[i].last_meal_mutex);
-    current_time = get_current_time();
-    time_since_meal = current_time - input->philosophers[i].last_meal_time;
-    pthread_mutex_unlock(&input->philosophers[i].last_meal_mutex);
+    pthread_mutex_lock(&data->philos[i].shared.last_meal_mutex);
+    current = get_time();
+    last_meal = data->philos[i].shared.last_meal;
+    pthread_mutex_unlock(&data->philos[i].shared.last_meal_mutex);
 
-    if (time_since_meal > input->time_to_die)
+    if ((current - last_meal) > data->time_to_die)
     {
-        pthread_mutex_lock(&input->death_mutex);
-        input->simulation_off = true;
-        pthread_mutex_unlock(&input->death_mutex);
-
-        pthread_mutex_lock(&input->print_mutex);
-        printf("%ld %d died\n", current_time - input->start_time,
-              input->philosophers[i].philo_id);
-        pthread_mutex_unlock(&input->print_mutex);
-        return (true);
+        pthread_mutex_lock(&data->death_mutex);
+        data->sim_stop = true;
+        pthread_mutex_unlock(&data->death_mutex);
+        print_status(&data->philos[i], DIED);
+        return (1);
     }
-    return (false);
+    return (0);
 }
 
-static bool check_all_full(t_args *input)
+static int check_full(t_data *data)
 {
     int i;
     int full_count;
 
-    i = 0;
     full_count = 0;
-    while (i < input->philo_nbr)
+    i = -1;
+    while (++i < data->philo_count)
     {
-        pthread_mutex_lock(&input->philosophers[i].meal_mutex);
-        if (input->philosophers[i].full ||
-           (input->meals_limit > 0 &&
-            input->philosophers[i].meal_count >= input->meals_limit))
-        {
-            input->philosophers[i].full = true;
+        pthread_mutex_lock(&data->philos[i].shared.meal_mutex);
+        if (data->philos[i].full)
             full_count++;
-        }
-        pthread_mutex_unlock(&input->philosophers[i].meal_mutex);
-        i++;
+        pthread_mutex_unlock(&data->philos[i].shared.meal_mutex);
     }
-
-    if (full_count == input->philo_nbr)
+    if (full_count == data->philo_count)
     {
-        pthread_mutex_lock(&input->full_mutex);
-        input->simulation_off = true;
-        pthread_mutex_unlock(&input->full_mutex);
-        return (true);
+        pthread_mutex_lock(&data->full_mutex);
+        data->sim_stop = true;
+        pthread_mutex_unlock(&data->full_mutex);
+        return (1);
     }
-    return (false);
+    return (0);
 }
 
-void    monitor_philosophers(t_args *input)
+void monitor(t_data *data)
 {
     int i;
 
     while (1)
     {
-        i = 0;
-        while (i < input->philo_nbr)
+        i = -1;
+        while (++i < data->philo_count)
         {
-            if (check_philosopher_death(input, i))
-                return ;
-            i++;
+            if (check_death(data, i))
+                return;
         }
-        if (input->meals_limit > 0 && check_all_full(input))
-            return ;
+        if (data->meal_limit > 0 && check_full(data))
+            return;
         usleep(1000);
     }
 }
