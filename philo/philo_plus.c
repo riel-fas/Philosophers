@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_plus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:33:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/04/29 11:33:34 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/05/11 09:57:15 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,25 @@ void	print_status(t_philosopher *philo, char *status)
 
 void	precise_sleep(long milliseconds, t_args *input)
 {
-	long	start_time;
-	int		should_continue;
+    long	start_time;
+    long	elapsed;
+    int		should_continue;
 
-	start_time = get_current_time();
-	while ((get_current_time() - start_time) < milliseconds)
-	{
-		pthread_mutex_lock(&input->status_mutex);
-		should_continue = !input->simulation_off;
-		pthread_mutex_unlock(&input->status_mutex);
-		if (!should_continue)
-			return;
-		usleep(500);
-	}
+    start_time = get_current_time();
+    while (1)
+    {
+        pthread_mutex_lock(&input->status_mutex);
+        should_continue = !input->simulation_off;
+        pthread_mutex_unlock(&input->status_mutex);
+
+        if (!should_continue)
+            return;
+
+        elapsed = get_current_time() - start_time;
+        if (elapsed >= milliseconds)
+            return;
+
+        // More precise sleep intervals
+        usleep(500);
+    }
 }
