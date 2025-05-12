@@ -9,17 +9,17 @@ NAME			=	philo
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -Werror
 
-SRCS			=	philo_main.c \
+SRCS			=	philo_getters.c \
 					philo_init.c \
+					philo_main.c \
 					philo_manager.c \
+					philo_monitoring.c \
+					philo_parsing.c \
 					philo_plus.c \
-					philo_time.c \
-					setters.c \
-					getters.c \
 					philo_routine.c \
-					philo_monitor.c \
-					timestamp.c \
-					philo_parsing.c
+					philo_setters.c \
+					philo_time.c \
+
 
 OBJS			=	${SRCS:.c=.o}
 

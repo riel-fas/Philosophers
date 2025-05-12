@@ -1,46 +1,60 @@
-// #include "philosophers.h"
-
-// int main(int ac, char **av)
-// {
-//     t_data  data;
-
-//     if (ac < 5 || ac > 6)
-//     {
-//         printf("Usage: %s number_of_philosophers time_to_die ", av[0]);
-//         printf("time_to_eat time_to_sleep [number_of_meals]\n");
-//         return (1);
-//     }
-//     if (init_data(&data, ac, av))
-//         return (1);
-//     if (init_philos(&data))
-//     {
-//         cleanup(&data);
-//         return (1);
-//     }
-//     monitor(&data);
-//     cleanup(&data);
-//     return (0);
-// }
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_main.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
+/*   Updated: 2025/05/12 15:07:50 by riel-fas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philosophers.h"
 
 int	main(int ac, char **av)
 {
-	t_pinfo		*pinfo;
+	t_philoinfo	*infos;
 	t_philo		*philos;
-	pthread_t	monitor_thread;
 
-	if (!philo_init(&pinfo, ac - 1, av + 1))
+	if (ac < 5 || ac > 6)
+	{
+		printf("⛔️INPUT SHOULD BE : ./philo x xx xxx xxxx [xxx]⛔️\n");
+		printf("x: number_of_philosophers and forks\n");
+		printf("xx : time_to_die (in milliseconds)\n");
+		printf("xxx: time_to_eat (in milliseconds)\n");
+		printf("xxxx: time_to_sleep (in milliseconds)\n");
+		printf("[xxx]: optional - number_of_times_each_philosopher_must_eat\n");
 		return (EXIT_FAILURE);
-	philos = create_philos(pinfo);
+	}
+	if (!philo_init(&infos, ac - 1, av + 1))
+		return (EXIT_FAILURE);
+	philos = create_philos(infos);
 	if (!philos)
 		return (EXIT_FAILURE);
-	assign_forks(philos, pinfo);
-	start_routine(philos, pinfo);
-	pthread_create(&monitor_thread, NULL, monitor, philos);
-	join_threads(philos, pinfo);
-	pthread_join(monitor_thread, NULL);
+	forks_assignement(philos, infos);
+	routine_start(philos, infos);
+	monitor(philos);
+	join_threads(philos, infos);
 	clear_mutexes(philos);
-	free_resources(philos, pinfo);
+	free_resources(philos, infos);
 	return (EXIT_SUCCESS);
 }
+
+// int main(int ac, char **av)
+// {
+//     t_philoinfo     *infos;
+//     t_philo     *philos;
+
+//     if (!philo_init(&infos, ac - 1, av + 1))
+//         return (EXIT_FAILURE);
+//     philos = create_philos(infos);
+//     if (!philos)
+//         return (0);
+//     assign_forks(philos, infos);
+//     start_routine(philos, infos);
+//     monitor(philos);
+//     join_threads(philos, infos);
+//     clear_mutexes(philos);
+//     free_resources(philos, infos);
+// }

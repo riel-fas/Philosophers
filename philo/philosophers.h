@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
+/*   Updated: 2025/05/12 15:38:55 by riel-fas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
@@ -6,87 +18,105 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
-# include <limits.h>
-# include <stdbool.h>
 
-typedef enum e_status
+typedef enum e_stats
 {
 	FORK_TAKEN,
 	EAT,
 	SLEEP,
 	THINK,
 	DIED
-}					t_status;
+}	t_stats;
 
-typedef struct s_pinfo
+typedef struct s_philoinfo
 {
-	pthread_mutex_t	*print_mutex;
-	pthread_mutex_t	*died_mutex;
-	pthread_mutex_t	*full_mutex;
-	int				died;
-	int				full;
-	long			start_time;
-	int				pnumber;
-	int				die_time;
-	int				eat_time;
-	int				sleep_time;
-	int				num_eats;
-}					t_pinfo;
+	pthread_mutex_t		*print_mutex;
+	pthread_mutex_t		*died_mutex;
+	pthread_mutex_t		*full_mutex;
+	int					died;
+	int					full;
+	long				start_time;
+	int					philo_number;
+	int					time_to_die;
+	int					time_to_eat;
+	int					time_to_sleep;
+	int					meal_limit;
+}	t_philoinfo;
 
-typedef struct s_shared_data
+typedef struct s_data
 {
-	pthread_mutex_t	last_meal_mutex;
-	pthread_mutex_t	meals_mutex;
-	unsigned long	last_meal;
-	int				meals;
-
-}					t_shared_data;
+	pthread_mutex_t		last_meal_mutex;
+	pthread_mutex_t		meals_mutex;
+	unsigned long		last_meal;
+	int					meals;
+}	t_data;
 
 typedef struct s_philo
 {
-	int				id;
-	pthread_t		thread;
-	pthread_mutex_t	*l_fork;
-	pthread_mutex_t	*r_fork;
-	int				is_full;
-	t_shared_data	sd;
-	t_pinfo			*pinfo;
-}					t_philo;
+	int					id;
+	pthread_t			thread;
+	pthread_mutex_t		*l_fork;
+	pthread_mutex_t		*r_fork;
+	int					is_full;
+	t_data				sd;
+	t_philoinfo			*pinfo;
+}	t_philo;
 
-// # All Functions with Semicolons
+//philo_getters.c
+long long		get_last_meal(t_data *sd);
+int				get_died(t_philoinfo *pinfo);
+int				get_meals(t_data *sd);
+int				get_full(t_philoinfo *pinfo);
 
-int main(int ac, char **av);
-int init_mutexes(t_pinfo *pinfo);
-int check_params(t_pinfo *pinfo, char *num_eats);
-int check_errors(t_pinfo *pinfo, char *num_eats, int error_found);
-int philo_init(t_pinfo **pinfo, int count, char **data);
-t_philo *create_philos(t_pinfo *pinfo);
-void assign_forks(t_philo *philos, t_pinfo *pinfo);
-void start_routine(t_philo *philos, t_pinfo *pinfo);
-long long timestamp(void);
-unsigned long program_time(long start_time);
-void await(unsigned long ms, t_pinfo *pinfo);
-void join_threads(t_philo *philos, t_pinfo *pinfo);
-long long get_last_meal(t_shared_data *sd);
-int get_died(t_pinfo *pinfo);
-int get_meals(t_shared_data *sd);
-int get_full(t_pinfo *pinfo);
-void set_last_meal(t_shared_data *sd);
-void set_died(t_pinfo *pinfo, int boolean);
-void increment_meals(t_shared_data *sd);
-void set_full(t_pinfo *pinfo, int is_full);
-int eat(t_philo *philo);
-int t_sleep(t_philo *philo);
-void think(t_philo *philo);
-void *routine(void *param);
-int check_death(t_philo *philos);
-int check_meals(t_philo *philos, int *full);
-void *monitor(void *param);
-void safe_print(t_philo *philo, t_status status);
-void clear_mutexes(t_philo *philos);
-void *free_philos(t_philo *philos, int size);
-void free_resources(t_philo *philos, t_pinfo *pinfo);
-void unlock_mutexes(t_philo *philos);
-int ft_atoi(const char *str, int *error_found);
+//philo_setters.c
+void			set_last_meal(t_data *sd);
+void			set_died(t_philoinfo *pinfo, int boolean);
+void			increment_meals(t_data *sd);
+void			set_full(t_philoinfo *pinfo, int is_full);
+
+//philo_init.c
+int				mutexes_init(t_philoinfo *info);
+int				check_params(t_philoinfo *info, char *num_eats);
+int				check_errors(t_philoinfo *info,
+					char *num_eats, int error_found);
+int				philo_init(t_philoinfo **info, int count, char **data);
+
+//philo_manager.c
+t_philo			*create_philos(t_philoinfo *info);
+void			forks_assignement(t_philo *philos, t_philoinfo *info);
+void			routine_start(t_philo *philos, t_philoinfo *info);
+void			join_threads(t_philo *philos, t_philoinfo *pinfo);
+
+//philo_monitoring.c
+int				death_check(t_philo *philos);
+int				meals_check(t_philo *philos, int *full);
+void			*monitor(void *param);
+
+//philo_parsing.c
+int				check_params(t_philoinfo *pinfo, char *num_eats);
+int				check_errors(t_philoinfo *pinfo, char *num_eats,
+					int error_found);
+int				ft_atoi(const char *str, int *error_found);
+int				check_args(t_philoinfo *pinfo, char *num_eats);
+
+//philo_print.c
+void			safe_print(t_philo *philo, t_stats status);
+
+//philo_routine.c
+int				ph_eat(t_philo *philo);
+int				ph_sleep(t_philo *philo);
+void			ph_think(t_philo *philo);
+void			*routine(void *param);
+
+//philo_time.c
+long long		get_current_time(void);
+unsigned long	program_time(long start_time);
+void			precise_sleep(unsigned long ms, t_philoinfo *pinfo);
+
+//philo_utils.c
+void			clear_mutexes(t_philo *philos);
+void			*free_philos(t_philo *philos, int size);
+void			free_resources(t_philo *philos, t_philoinfo *pinfo);
+void			unlock_mutexes(t_philo *philos);
 
 #endif
