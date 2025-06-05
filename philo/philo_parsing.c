@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:33:41 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/12 15:36:26 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:01:26 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	ft_atoi(const char *str, int *error_found)
 
 int	check_args(t_philoinfo *pinfo, char *num_eats)
 {
-	return (pinfo->philo_number <= 0 || pinfo->time_to_die <= 0
-		|| pinfo->time_to_eat <= 0 || pinfo->time_to_sleep <= 0
+	return (pinfo->philo_number <= 0 || pinfo->time_to_die < 60
+		|| pinfo->time_to_eat < 60 || pinfo->time_to_sleep < 60
 		|| (num_eats && pinfo->meal_limit <= 0));
 }
 

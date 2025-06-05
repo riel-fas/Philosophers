@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:25:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/06/05 17:07:18 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:03:13 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ int	philo_init(t_philoinfo **info, int count, char **data)
 	return (1);
 }
 
-
-int validate_philo_number(t_philoinfo **info)
+int	validate_philo_number(t_philoinfo **info)
 {
 	if ((*info)->philo_number <= 0)
 	{
@@ -73,4 +72,3 @@ int validate_philo_number(t_philoinfo **info)
 	}
 	return (1);
 }
-

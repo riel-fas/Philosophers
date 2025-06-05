@@ -3,27 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   philo_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/06/05 16:46:18 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:03:30 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	ll()
-{
-	system("leaks -q philo");
-
-}
-
 int	main(int ac, char **av)
 {
 	t_philoinfo	*infos;
 	t_philo		*philos;
-
-	atexit(ll);
 
 	if (ac < 5 || ac > 6)
 	{

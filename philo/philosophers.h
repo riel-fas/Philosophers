@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/06/05 17:14:27 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:03:42 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,5 @@ void			clear_mutexes(t_philo *philos);
 void			*free_philos(t_philo *philos, int size);
 void			free_resources(t_philo *philos, t_philoinfo *pinfo);
 void			unlock_mutexes(t_philo *philos);
-
-
-
 
 #endif
