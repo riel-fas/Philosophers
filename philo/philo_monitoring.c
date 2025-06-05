@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   philo_monitoring.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: riel-fas <riel-fas@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 15:51:32 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/12 15:36:03 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:35:09 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+//riad
 int	death_check(t_philo *philos)
 {
 	int			i;
