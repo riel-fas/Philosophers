@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 08:25:31 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/12 15:19:12 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 17:07:18 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	philo_init(t_philoinfo **info, int count, char **data)
 		return (0);
 	**info = (t_philoinfo){0};
 	(*info)->philo_number = ft_atoi(data[0], &error_found);
-	if ((*info)->philo_number <= 0)
+	if (!validate_philo_number(info))
 		return (0);
 	(*info)->time_to_die = ft_atoi(data[1], &error_found);
 	(*info)->time_to_eat = ft_atoi(data[2], &error_found);
@@ -62,3 +62,15 @@ int	philo_init(t_philoinfo **info, int count, char **data)
 	mutexes_init((*info));
 	return (1);
 }
+
+
+int validate_philo_number(t_philoinfo **info)
+{
+	if ((*info)->philo_number <= 0)
+	{
+		free(*info);
+		return (0);
+	}
+	return (1);
+}
+

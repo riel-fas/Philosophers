@@ -6,7 +6,7 @@
 /*   By: riel-fas <riel-fas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 03:05:34 by riel-fas          #+#    #+#             */
-/*   Updated: 2025/05/12 15:38:55 by riel-fas         ###   ########.fr       */
+/*   Updated: 2025/06/05 17:14:27 by riel-fas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int				check_params(t_philoinfo *info, char *num_eats);
 int				check_errors(t_philoinfo *info,
 					char *num_eats, int error_found);
 int				philo_init(t_philoinfo **info, int count, char **data);
+int				validate_philo_number(t_philoinfo **info);
 
 //philo_manager.c
 t_philo			*create_philos(t_philoinfo *info);
@@ -118,5 +119,8 @@ void			clear_mutexes(t_philo *philos);
 void			*free_philos(t_philo *philos, int size);
 void			free_resources(t_philo *philos, t_philoinfo *pinfo);
 void			unlock_mutexes(t_philo *philos);
+
+
+
 
 #endif
